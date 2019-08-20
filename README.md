@@ -20,7 +20,7 @@ This is a ROS wrapper for OpenFace 2.1.0. In particular, given an image of a fac
 
 * Clone the OpenFace project release 2.1.0 : `git clone https://github.com/TadasBaltrusaitis/OpenFace/tree/OpenFace_2.1.0`
 * Download model : [Model download · TadasBaltrusaitis/OpenFace Wiki · GitHub](https://github.com/TadasBaltrusaitis/OpenFace/wiki/Model-download)
-* Install OpenFace, following this instruction : [Unix Installation · TadasBaltrusaitis/OpenFace Wiki · GitHub](https://github.com/TadasBaltrusaitis/OpenFace/wiki/Unix-Installation) (don't forget to sudo make install at the end)
+* Install OpenFace, following this instruction : [Unix Installation · TadasBaltrusaitis/OpenFace Wiki · GitHub](https://github.com/TadasBaltrusaitis/OpenFace/wiki/Unix-Installation/8c2096c032066021ebe680b00c22964c6d473027) (don't forget to sudo make install at the end)
 * Download [openface2_ros](https://github.com/ditoec/openface_ros) to your catkin src folder and `cd .. && catkin make`
 * Clone [`usb_cam` ros node](http://wiki.ros.org/usb_cam) or other ros node of your choice for interfacing with USB camera
 
