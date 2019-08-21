@@ -1,0 +1,56 @@
+FROM ros:melodic-perception
+
+RUN apt-get update && apt-get install -y \
+    libopenblas-dev \
+    unzip \
+    wget
+
+# Install OpenCV 3.4.0
+WORKDIR /root
+RUN wget https://github.com/opencv/opencv/archive/3.4.0.zip
+RUN unzip 3.4.0.zip
+RUN mkdir -p opencv-3.4.0/build
+WORKDIR /root/opencv-3.4.0/build
+RUN cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D BUILD_TIFF=ON -D WITH_TBB=ON -D BUILD_SHARED_LIBS=OFF ..
+RUN make -j8
+RUN make install
+
+# Install dlib 19.13
+WORKDIR /root
+RUN wget http://dlib.net/files/dlib-19.13.tar.bz2
+RUN tar xf dlib-19.13.tar.bz2
+RUN mkdir -p dlib-19.13/build
+WORKDIR /root/dlib-19.13/build
+RUN cmake ..
+RUN cmake --build . --config Release 
+RUN make install
+
+# Install OpenFace 2.1.0
+WORKDIR /root
+RUN git clone https://github.com/TadasBaltrusaitis/OpenFace.git
+WORKDIR /root/OpenFace
+RUN git checkout OpenFace_2.1.0
+RUN bash ./download_models.sh
+RUN mkdir build
+WORKDIR /root/OpenFace/build
+RUN cmake -D CMAKE_BUILD_TYPE=RELEASE CMAKE_CXX_FLAGS="-std=c++11" -D CMAKE_EXE_LINKER_FLAGS="-std=c++11" .. 
+RUN make -j8
+RUN make install
+
+# Install openface2_ros
+RUN mkdir -p /root/catkin_ws/src
+RUN cd /root/catkin_ws/src && git clone https://github.com/ditoec/openface2_ros.git
+RUN bash -c "cd /root/catkin_ws && source /opt/ros/melodic/setup.bash && catkin_make"
+
+RUN apt-get update && apt-get install -y ros-melodic-usb-cam
+
+# Load ROS environment at each run
+COPY ./ros_entrypoint.sh /
+ENTRYPOINT ["/ros_entrypoint.sh"]
+
+# Load ROS environment at exec bash
+RUN echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc
+RUN echo "source /root/catkin_ws/devel/setup.bash" >> /root/.bashrc
+
+WORKDIR /root/catkin_ws
+CMD ["bash"]

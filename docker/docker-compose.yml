@@ -1,0 +1,32 @@
+version: "3"
+services:
+  master:
+    build: .
+    container_name: master
+    command: roscore
+
+  usb_cam:
+    build: .
+    container_name: usb_cam
+    depends_on: 
+      - master
+    devices: 
+      - /dev/video0:/dev/video0
+    environment:
+      - ROS_HOSTNAME=usb_cam
+      - ROS_MASTER_URI=http://master:11311
+    command: rosrun usb_cam usb_cam_node
+
+  openface2_ros:
+    build: .
+    container_name: openface2_ros
+    depends_on: 
+      - master
+    environment: 
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - ROS_HOSTNAME=openface2_ros
+      - ROS_MASTER_URI=http://master:11311
+    volumes: 
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    command: roslaunch --wait openface2_ros openface2_ros.launch

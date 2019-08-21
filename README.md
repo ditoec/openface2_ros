@@ -44,6 +44,20 @@ If running `openface2_ros` results in a segfault or you see the following lines 
 
 then openface2 ros is linking against OpenCV2 instead of OpenCV3. To fix this: update cmake to at least 3.6.2, rebuild OpenCV3, clone vision\_opencv into the src folder of your catkin workspace, then recompile cv\_bridge. Remake your catkin workspace, and the segfault and warnings should have been resolved.
 
+## Installation with Docker
+
+If you don't want to change your environment, you had better to use Docker.
+
+### Requirements
+
+* Docker
+* Docker Compose
+
+### Running
+
+* xhost +local:root
+* docker-compose up
+
 ## Published Topics
 
 * `/openface2/faces` ( `openface2_ros/faces` )
